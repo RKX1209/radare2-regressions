@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# TODO: This script requires ROOT to be run in OSX
+# (or just sign the r2 binary to get debugger priviledges)
+# GPL 3+ - Copyright (C) 2017  rkx1209
+
+for a in . .. ../.. ; do [ -e $a/tests.sh ] && . $a/tests.sh ; done
+
+# "!" - run commands (via system)
+
+NAME='dbg.stepback'
+FILE=/bin/ls
+ARGS=-d
+BROKEN=
+CMDS='
+db main
+db 0x00402ab2
+dc
+dts+
+dc
+dsb
+dr rip
+dk 9
+'
+EXPECT='0x00402aab
+'
+run_test
+
+NAME='debug stepback from callee'
+FILE=../../bins/elf/analysis/calls_x64
+ARGS=-d
+BROKEN=
+CMDS='
+db main
+db 0x0040052f
+dc
+dts+
+dc
+dsb
+dr rip
+dk 9
+'
+EXPECT='0x00400575
+'
+run_test
+
+NAME='debug stepback from caller'
+FILE=../../bins/elf/analysis/calls_x64
+ARGS=-d
+BROKEN=
+CMDS='
+db main
+db 0x0040057c
+dc
+dts+
+dc
+dsb
+dr rip
+'
+EXPECT='0x0040053b
+Hello world
+'
+run_test
