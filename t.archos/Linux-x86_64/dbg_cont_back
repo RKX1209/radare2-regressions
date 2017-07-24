@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# TODO: This script requires ROOT to be run in OSX
+# (or just sign the r2 binary to get debugger priviledges)
+# GPL 3+ - Copyright (C) 2017  rkx1209
+
+for a in . .. ../.. ; do [ -e $a/tests.sh ] && . $a/tests.sh ; done
+
+# "!" - run commands (via system)
+
+NAME='dbg.contback'
+FILE=/bin/ls
+ARGS=-d
+BROKEN=
+CMDS='
+db main
+db 0x00402ab2
+dc
+dts+
+dc
+dcb
+dr rip
+dk 9
+'
+EXPECT='0x00402a00
+'
+run_test
+
+NAME='dbg.manycontback'
+FILE=/bin/ls
+ARGS=-d
+BROKEN=
+CMDS='
+db main
+db 0x00402a2c
+db 0x00402a59
+db 0x00402ab2
+dc
+dts+
+dc
+dc
+dc
+dcb
+dr rip
+dcb
+dr rip
+dcb
+dr rip
+dk 9
+'
+EXPECT='0x00402a59
+0x00402a2c
+0x00402a00
+'
+run_test
