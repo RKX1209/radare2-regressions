@@ -59,27 +59,3 @@ EXPECT='0x0040053b
 Hello world
 '
 run_test
-
-NAME='ESIL single stepback'
-FILE=../../bins/elf/analysis/calls_x64
-ARGS=
-BROKEN=
-CMDS='
-e asm.emu=true
-e asm.bits=64
-e asm.arch=x86
-e asm.emuwrite=true
-e io.cache=true
-aei
-aeim
-aeip
-aets+
-aeso
-aeso
-aesb
-dr rip
-dk 9
-'
-EXPECT='0x00400412
-'
-run_test

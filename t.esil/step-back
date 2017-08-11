@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# GPL 3+ - Copyright (C) 2017  Ren Kimura (rkx1209)
+
+for a in . .. ../.. ; do [ -e $a/tests.sh ] && . $a/tests.sh ; done
+
+NAME='ESIL single stepback'
+FILE=../bins/elf/analysis/calls_x64
+ARGS=
+BROKEN=
+CMDS='
+e asm.emu=true
+e asm.bits=64
+e asm.arch=x86
+e asm.emuwrite=true
+e io.cache=true
+aei
+aeim
+aeip
+aets+
+aeso
+aeso
+aesb
+dr rip
+dk 9
+'
+EXPECT='0x00400412
+'
+run_test
