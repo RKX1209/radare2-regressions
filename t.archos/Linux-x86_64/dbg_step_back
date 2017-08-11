@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# TODO: This script requires ROOT to be run in OSX
-# (or just sign the r2 binary to get debugger priviledges)
 # GPL 3+ - Copyright (C) 2017  rkx1209
 
 for a in . .. ../.. ; do [ -e $a/tests.sh ] && . $a/tests.sh ; done
@@ -9,12 +7,12 @@ for a in . .. ../.. ; do [ -e $a/tests.sh ] && . $a/tests.sh ; done
 # "!" - run commands (via system)
 
 NAME='dbg.stepback'
-FILE=/bin/ls
+FILE=../../bins/elf/analysis/ls-linux-x86_64-zlul
 ARGS=-d
 BROKEN=
 CMDS='
 db main
-db 0x00402ab2
+db 0x004028fe
 dc
 dts+
 dc
@@ -22,7 +20,7 @@ dsb
 dr rip
 dk 9
 '
-EXPECT='0x00402aab
+EXPECT='0x004028f9
 '
 run_test
 
@@ -59,5 +57,29 @@ dr rip
 '
 EXPECT='0x0040053b
 Hello world
+'
+run_test
+
+NAME='ESIL single stepback'
+FILE=../../bins/elf/analysis/calls_x64
+ARGS=
+BROKEN=
+CMDS='
+e asm.emu=true
+e asm.bits=64
+e asm.arch=x86
+e asm.emuwrite=true
+e io.cache=true
+aei
+aeim
+aeip
+aets+
+aeso
+aeso
+aesb
+dr rip
+dk 9
+'
+EXPECT='0x00400412
 '
 run_test
