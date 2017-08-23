@@ -1,0 +1,20 @@
+#!/bin/sh
+# GPL 3+ - Copyright (C) 2017  rkx1209
+
+for a in . .. ../.. ; do [ -e $a/tests.sh ] && . $a/tests.sh ; done
+
+# "!" - run commands (via system)
+
+NAME='rwatchpoint test'
+FILE=../../bins/elf/analysis/x86-helloworld-gcc
+ARGS=-d
+BROKEN=
+CMDS='dbw 0x80484b0 r
+dc
+dr rip
+dk 9
+'
+EXPECT='0x08048409
+'
+IGNORE_ERR=1
+run_test
